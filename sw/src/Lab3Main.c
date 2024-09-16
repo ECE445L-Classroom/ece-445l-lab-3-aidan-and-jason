@@ -33,10 +33,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "../inc/ST7735.h"
-#include "modules/display.c"
-#include "modules/interrupt.c"
-#include "modules/speaker.c"
-#include "modules/switch.c"
+#include "modules/display.h"
+#include "modules/interrupt.h"
+#include "modules/speaker.h"
+#include "modules/switch.h"
 #include "../inc/PLL.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/Timer0A.h"

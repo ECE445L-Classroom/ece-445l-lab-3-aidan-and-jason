@@ -1,0 +1,1 @@
+// Declare functions for LCD initialization and output here

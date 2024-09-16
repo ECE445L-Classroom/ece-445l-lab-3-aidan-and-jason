@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "../../inc/tm4c123gh6pm.h"
+#include "speaker.h"
 
 #define PD0                   (*((volatile unsigned long *)0x40007004))
 
