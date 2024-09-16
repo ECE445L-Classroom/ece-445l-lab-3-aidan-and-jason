@@ -25,10 +25,9 @@
 // Specify your hardware connections, feel free to change
 // PD0 is squarewave output to speaker
 // PE0 is mode select
-// PE1 is left
-// PE2 is right 
-// PE3 is up
-// PE4 is down
+// PE1 is edit time
+// PE2 is move right
+// PE3 is change appearence (later)
 // if alarm is sounding, any button will quiet the alarm
 
 #include <stdio.h>
@@ -41,11 +40,28 @@
 #include "../inc/PLL.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/Timer0A.h"
+#include "../inc/Switch.h"
 #include "Lab3.h"
+
+#define PD0                   (*((volatile unsigned long *)0x40007004))
+#define PE0                   (*((volatile unsigned long *)0x40024004))
+#define PE1                   (*((volatile unsigned long *)0x40024008))
+#define PE2                   (*((volatile unsigned long *)0x40024010))
+#define PE3                   (*((volatile unsigned long *)0x40024020))
 // ---------- Prototypes   -------------------------
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
+
+uint32_t RiseCount, FallCount;
+void Rise(void){
+  PE0 ^= 0x01;
+  RiseCount++;
+}
+void Fall(void){
+  PE0 ^= 0x01;
+  FallCount++;
+}
 
 int rawTime;
 int main(void){
@@ -53,8 +69,11 @@ int main(void){
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
   // write this
   //switch init
+  Switch_Init(&Rise, &Fall);
   //display init
+  ST7735_InitB();
   //speaker init
+
   //interrupt inits
   EnableInterrupts();
   while(1){
