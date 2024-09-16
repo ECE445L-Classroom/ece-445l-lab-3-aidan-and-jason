@@ -34,6 +34,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "../inc/ST7735.h"
+#include "modules/display.c"
+#include "modules/interrupt.c"
+#include "modules/speaker.c"
+#include "modules/switch.c"
 #include "../inc/PLL.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/Timer0A.h"
@@ -42,13 +46,22 @@
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
+
+int rawTime;
 int main(void){
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
   // write this
+  //switch init
+  //display init
+  //speaker init
+  //interrupt inits
   EnableInterrupts();
   while(1){
       // write this
+      //poll switches 
+      //use appropriate logic
+      //draw
   }
 }
 

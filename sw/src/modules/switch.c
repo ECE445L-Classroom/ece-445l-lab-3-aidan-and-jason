@@ -1,0 +1,1 @@
+//read switches and return which switches are pressed
