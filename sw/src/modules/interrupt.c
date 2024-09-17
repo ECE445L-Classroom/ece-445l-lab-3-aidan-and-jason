@@ -9,6 +9,3 @@ void timerInit(int priority){
 void incrementTime(){
     rawTime++;
 }
-
-
-//edge triggered switches setup

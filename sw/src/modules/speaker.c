@@ -22,7 +22,7 @@ void Clock_Delay1ms(volatile uint32_t n){
 }
 
 //initialize output for speaker (PD0)
-void SpeakerInit(){
+void speakerInit(){
     SYSCTL_RCGCGPIO_R |= 0x08;
     while((SYSCTL_PRGPIO_R&0x08) == 0){};
     GPIO_PORTC_PCTL_R &= ~0x00000000F;
@@ -33,7 +33,7 @@ void SpeakerInit(){
 }
 
 //output sound using squarewave with a delay
-void SpeakerOutput(){
+void speakerOutput(){
     for(int i = 0; i < 30; i++){
         PD0 ^= 0x01;
         Clock_Delay1ms(1);

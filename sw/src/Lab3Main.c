@@ -62,25 +62,62 @@ void Fall(void){
   PE0 ^= 0x01;
   FallCount++;
 }
-
+// global declarations
+int switchIn;
 int rawTime;
+
 int main(void){
+  int selectSwitch;
+  int editTimeSwitch;
+  int moveSwitch;
+  int appearanceSwitch;
+  int mode;     //  0 for normal displaying mode, 1 for editing time, 2 for editing alarm
+  int displayMode = 0;  //  possible idea to toggle between digital time and clock face, 0 for digital 1 for clock face
+  int hour;
+  int minute;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
-  // write this
-  //switch init
-  Switch_Init(&Rise, &Fall);
+  switchInit();
+  //Switch_Init(&Rise, &Fall);
   //display init
   ST7735_InitB();
-  //speaker init
-
-  //interrupt inits
+  speakerInit();
   EnableInterrupts();
   while(1){
-      // write this
-      //poll switches 
-      //use appropriate logic
+      // handle switch input unconditionally using global variable (grab lines from switch.c)
+
+      // read switches
+      selectSwitch = switchIn & 0x01;
+      editTimeSwitch = switchIn & 0x02;
+      moveSwitch = switchIn & 0x04;
+      appearanceSwitch = switchIn & 0x08;
+
+      // switching mode
+      if(selectSwitch){
+        mode = (mode+1) % 3;
+      }
+      
+
+      //store time in temporary local variable
+
+/*    handle switch logic:
+      1) if an alarm is sounding, then clear alarm on any switch input
+      2) if switch to edit time is pressed, then enter "edit mode" (while loop which is only cleared once a time is confirmed and drawn)
+       by possibly drawing an arrow and changing the raw time variable according to the change then drawing the temporary value
+         once the select switch is pressed with a time, then confirm change and draw
+*/      
+
       //draw
+      hour = rawTime/60;
+      minute = rawTime%60;
+      
+      int time = hour * 100 + minute;   //time in the form 1234 for 12:34
+      for(int i = 0; i < 4; i++){
+        
+      }
+      
+
+      
   }
 }
 
