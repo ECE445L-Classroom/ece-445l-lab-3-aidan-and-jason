@@ -58,11 +58,11 @@ volatile int switchIn;
 volatile int rawTime;
 
 int main(void){
-  int selectSwitch;
-  int editTimeSwitch;
-  int moveSwitch;
-  int appearanceSwitch;
-  int mode;     //  0 for normal displaying mode, 1 for editing time, 2 for editing alarm
+  int button1;
+  int button2;
+  int button3;
+  int button4;
+  int mode = 0;     //  0 for normal displaying mode, 1 for editing time, 2 for editing alarm
   int displayMode = 0;  //  possible idea to toggle between digital time and clock face, 0 for digital 1 for clock face
   int hour;
   int minute;
@@ -83,22 +83,23 @@ int main(void){
   while(1){
       // handle switch input unconditionally using global variable (grab lines from switch.c)
       // read switches
-      selectSwitch = switchIn & 0x01;
-      editTimeSwitch = switchIn & 0x02;
-      moveSwitch = switchIn & 0x04;
-      appearanceSwitch = switchIn & 0x08;
 			debug = switchIn;
+      button1 = switchIn & 0x01;
+      button2 = switchIn & 0x02;
+      button3 = switchIn & 0x04;
+      button4 = switchIn & 0x08;
+			
 
-      if(selectSwitch || editTimeSwitch || moveSwitch || appearanceSwitch){
+      if(button1 || button2 || button3 || button4){
         speakerStatus = 1;
         speakerMode(1);
       }
-      if(speakerStatus == 1 && switchIn == 0){
+      else if(speakerStatus == 1 && switchIn == 0){
         speakerMode(0);
         speakerStatus = 0;
       }
       // switching mode
-      if(selectSwitch){
+      if(button4){
         mode = (mode+1) % 3;
       }
       
@@ -121,7 +122,7 @@ int main(void){
 				alarmFlag = 1;
 			}
 			
-			if((selectSwitch || editTimeSwitch || moveSwitch || appearanceSwitch) && alarmFlag){
+			if((button1 || button2 || button3 || button4) && alarmFlag){
 				alarmFlag = 0; // disable the interrupt
 				// TODO: add snooze?
 			}
