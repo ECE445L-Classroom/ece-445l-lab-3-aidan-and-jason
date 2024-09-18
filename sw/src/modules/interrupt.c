@@ -9,6 +9,6 @@ void incrementTime(){
 }
 
 void timerInit(int priority){
-    Timer0A_Init(&incrementTime, 80000000, 0);
+    Timer0A_Init(&incrementTime, 80000000, priority);
 }
 

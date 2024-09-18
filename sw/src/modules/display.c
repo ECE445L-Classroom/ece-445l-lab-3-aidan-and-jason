@@ -4,7 +4,7 @@
 //write to lcd
 void draw(uint32_t hour, uint32_t minute){
 	// HELPFUL: ST7735_Color565(r,g,b) takes in 8 bit rgb values and returns the appropriate color in the ST7735 format
-	ST7735_FillScreen(0x0000); // black bg, can change later
+	//ST7735_FillScreen(0x0000); // black bg, can change later
 	ST7735_DrawCircle(50,50,0xFFFF); // this will be 10px in diameter and probably filled in, 
 	// TODO: we're going to need to rewrite this method
 	// draw the current time digitally:
@@ -21,6 +21,11 @@ void draw(uint32_t hour, uint32_t minute){
 	ST7735_SetCursor(x,0);
 	ST7735_OutChar(':');
 	x++;
+	if(minute < 10){
+		ST7735_SetCursor(x,0);
+		ST7735_OutUDec(0);
+		x++;
+	}
 	ST7735_SetCursor(x,0);
 	ST7735_OutUDec(minute);
 	

@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "../../inc/tm4c123gh6pm.h"
+#include "switch.h"
 // PE0 is mode select
 // PE1 is edit time
 // PE2 is move right

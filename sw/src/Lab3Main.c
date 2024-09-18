@@ -23,7 +23,7 @@
  http://users.ece.utexas.edu/~valvano/
  */
 // Specify your hardware connections, feel free to change
-// PD0 is squarewave output to speaker
+// PF1 is squarewave output to speaker
 // PE0 is mode select
 // PE1 is edit time
 // PE2 is move right
@@ -43,11 +43,6 @@
 #include "../inc/Switch.h"
 #include "Lab3.h"
 
-#define PD0                   (*((volatile unsigned long *)0x40007004))
-#define PE0                   (*((volatile unsigned long *)0x40024004))
-#define PE1                   (*((volatile unsigned long *)0x40024008))
-#define PE2                   (*((volatile unsigned long *)0x40024010))
-#define PE3                   (*((volatile unsigned long *)0x40024020))
 // ---------- Prototypes   -------------------------
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -74,23 +69,25 @@ int main(void){
 	int alarmFlag = 0;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
-  ST7735_InitR(INITR_GREENTAB);
+  ST7735_InitR(INITR_REDTAB);
   ST7735_InvertDisplay(1);
 	ST7735_FillScreen(0x0000);
   //Switch_Init(&Rise, &Fall);
   speakerInit(); // valvano case...
-  speakerOutput();
 	switchInit();
-  //EnableInterrupts();
+  timerInit(2);
+  EnableInterrupts();
   while(1){
       // handle switch input unconditionally using global variable (grab lines from switch.c)
-
       // read switches
       selectSwitch = switchIn & 0x01;
       editTimeSwitch = switchIn & 0x02;
       moveSwitch = switchIn & 0x04;
       appearanceSwitch = switchIn & 0x08;
 
+      if(selectSwitch || editTimeSwitch || moveSwitch || appearanceSwitch){
+        speakerOutput();
+      }
       // switching mode
       if(selectSwitch){
         mode = (mode+1) % 3;
