@@ -11,7 +11,7 @@ extern int switchIn;
 //read switches and return which switches are pressed
 void GPIOPortE_Handler(void){
   GPIO_PORTE_ICR_R = 0x0F; // clear interrupt flags 0-3
-  switchIn = GPIO_PORTE_DATA_R & 0xF;
+  switchIn = (~GPIO_PORTE_DATA_R) & 0xF;
   // moved logic to main to make returning easier
   /* int selectSwitch = switchIn & 0x01;
      int editTimeSwitch = switchIn & 0x02;
@@ -28,7 +28,7 @@ void switchInit(void){
 
   GPIO_PORTE_DIR_R &= ~0x0F;    // (c) make PE0 to PE3 in (built-in button)
   GPIO_PORTE_DEN_R |= 0x0F;     //     enable digital I/O on PE0123
-  GPIO_PORTE_PUR_R |= 0x0F;     //     enable weak pull-up on PE0123
+  //GPIO_PORTE_PUR_R |= 0x0F;     //     enable weak pull-up on PE0123
   GPIO_PORTE_IS_R &= ~0x0F;     // (d) PE0123 is edge-sensitive
   GPIO_PORTE_IBE_R &= ~0x0F;    //     PE0123 is not both edges
   GPIO_PORTE_IEV_R &= ~0x0F;    //     PE0123 falling edge event

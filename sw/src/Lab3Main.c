@@ -40,6 +40,7 @@
 #include "../inc/PLL.h"
 #include "../inc/tm4c123gh6pm.h"
 #include "../inc/Timer0A.h"
+#include "../inc/Timer2A.h"
 #include "../inc/Switch.h"
 #include "Lab3.h"
 
@@ -67,6 +68,8 @@ int main(void){
   int minute;
 	int alarm;		// the time for the alarm, stored in the same manner as the global time (except no seconds) '
 	int alarmFlag = 0;
+  int speakerStatus = 0;
+	int debug = 0;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
   ST7735_InitR(INITR_REDTAB);
@@ -84,9 +87,15 @@ int main(void){
       editTimeSwitch = switchIn & 0x02;
       moveSwitch = switchIn & 0x04;
       appearanceSwitch = switchIn & 0x08;
+			debug = switchIn;
 
       if(selectSwitch || editTimeSwitch || moveSwitch || appearanceSwitch){
-        speakerOutput();
+        speakerStatus = 1;
+        speakerMode(1);
+      }
+      if(speakerStatus == 1 && switchIn == 0){
+        speakerMode(0);
+        speakerStatus = 0;
       }
       // switching mode
       if(selectSwitch){
