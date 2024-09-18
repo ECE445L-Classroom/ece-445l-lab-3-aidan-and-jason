@@ -1,3 +1,6 @@
+#include "../../inc/ST7735.h"
+
+
 //write to lcd
 void draw(uint32_t hour, uint32_t minute){
 	// HELPFUL: ST7735_Color565(r,g,b) takes in 8 bit rgb values and returns the appropriate color in the ST7735 format

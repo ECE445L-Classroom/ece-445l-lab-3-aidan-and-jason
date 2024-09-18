@@ -58,8 +58,8 @@ void Fall(void);
 uint32_t RiseCount, FallCount;
 
 // global declarations
-int switchIn;
-int rawTime;
+volatile int switchIn;
+volatile int rawTime;
 
 int main(void){
   int selectSwitch;
@@ -74,12 +74,14 @@ int main(void){
 	int alarmFlag = 0;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
-  switchInit();
+  ST7735_InitR(INITR_GREENTAB);
+  ST7735_InvertDisplay(1);
+	ST7735_FillScreen(0x0000);
   //Switch_Init(&Rise, &Fall);
-  //display init
-  ST7735_InitB();
-  SpeakerInit(); // valvano case...
-  EnableInterrupts();
+  speakerInit(); // valvano case...
+  speakerOutput();
+	switchInit();
+  //EnableInterrupts();
   while(1){
       // handle switch input unconditionally using global variable (grab lines from switch.c)
 

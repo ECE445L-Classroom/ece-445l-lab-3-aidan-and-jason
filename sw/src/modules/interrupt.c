@@ -1,11 +1,14 @@
 //timer engine
 #include "../../inc/Timer0A.h"
-#include "../Lab3Main.c"
+#include <stdint.h>
+
+extern int rawTime;
+
+void incrementTime(){
+    rawTime++;
+}
 
 void timerInit(int priority){
     Timer0A_Init(&incrementTime, 80000000, 0);
 }
 
-void incrementTime(){
-    rawTime++;
-}

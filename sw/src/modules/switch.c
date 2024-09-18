@@ -1,13 +1,14 @@
 #include <stdint.h>
-#include "../Lab3Main.c"
 #include "../../inc/tm4c123gh6pm.h"
 // PE0 is mode select
 // PE1 is edit time
 // PE2 is move right
 // PE3 is change appearence (later)
 
+extern int switchIn;
+
 //read switches and return which switches are pressed
-int GPIOPortE_Handler(void){
+void GPIOPortE_Handler(void){
   GPIO_PORTE_ICR_R = 0x0F; // clear interrupt flags 0-3
   switchIn = GPIO_PORTE_DATA_R & 0xF;
   // moved logic to main to make returning easier
