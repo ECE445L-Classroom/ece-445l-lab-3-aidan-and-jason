@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "../../inc/tm4c123gh6pm.h"
+#include "../../inc/Timer1A.h"
 #include "speaker.h"
 
 #define PF1                   (*((volatile unsigned long *)0x40025008))
@@ -29,15 +30,12 @@ void speakerInit(){
     GPIO_PORTF_AMSEL_R &= ~0x02;
     GPIO_PORTF_DIR_R |= 0x02;   // OUTPUT
     GPIO_PORTF_AFSEL_R &= ~0x02;      //  regular port function
-    GPIO_PORTF_DEN_R |= 0x02;         //  enable digital port
+    GPIO_PORTF_DEN_R |= 0x02;         //  enable digital port		
+		Timer1A_Init(&speakerOutput, 1000, 3);
 }
 
 //output sound using squarewave with a delay
 // TODO: change this to be interrupt based, and run at a faster frequency so it doesn't sound weird
 void speakerOutput(){
-    for(int i = 0; i < 500; i++){
-        PF1 ^= 0x02;
-        Clock_Delay1ms(1);
-        PF1 ^= 0x02;
-    }
+	PF1 ^= 0x02;
 }
