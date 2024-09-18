@@ -33,6 +33,7 @@ void speakerInit(){
 }
 
 //output sound using squarewave with a delay
+// TODO: change this to be interrupt based, and run at a faster frequency so it doesn't sound weird
 void speakerOutput(){
     for(int i = 0; i < 30; i++){
         PD0 ^= 0x01;

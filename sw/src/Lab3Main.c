@@ -53,15 +53,10 @@ void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 void WaitForInterrupt(void);  // low power mode
 
+void Rise(void); // no clue what these do Jason
+void Fall(void);
 uint32_t RiseCount, FallCount;
-void Rise(void){
-  PE0 ^= 0x01;
-  RiseCount++;
-}
-void Fall(void){
-  PE0 ^= 0x01;
-  FallCount++;
-}
+
 // global declarations
 int switchIn;
 int rawTime;
@@ -75,13 +70,15 @@ int main(void){
   int displayMode = 0;  //  possible idea to toggle between digital time and clock face, 0 for digital 1 for clock face
   int hour;
   int minute;
+	int alarm;		// the time for the alarm, stored in the same manner as the global time (except no seconds) '
+	int alarmFlag = 0;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
   switchInit();
   //Switch_Init(&Rise, &Fall);
   //display init
   ST7735_InitB();
-  speakerInit();
+  SpeakerInit(); // valvano case...
   EnableInterrupts();
   while(1){
       // handle switch input unconditionally using global variable (grab lines from switch.c)
@@ -106,18 +103,36 @@ int main(void){
        by possibly drawing an arrow and changing the raw time variable according to the change then drawing the temporary value
          once the select switch is pressed with a time, then confirm change and draw
 */      
-
-      //draw
-      hour = rawTime/60;
+			hour = rawTime/60;
       minute = rawTime%60;
+			
+			
+			// alarm logic
+			if(hour == alarm/60 && minute == rawTime%60){ // this is wrong, I just don't know how to get rid of the seconds yet
+				// enable the interrupt for the square wave (might be unneeded read/write)
+				alarmFlag = 1;
+			}
+			
+			if((selectSwitch || editTimeSwitch || moveSwitch || appearanceSwitch) && alarmFlag){
+				alarmFlag = 0; // disable the interrupt
+				// TODO: add snooze?
+			}
+
+      //draw the clock face, hands, display digital time, and alarm setup.
+			draw(hour, minute);
       
       int time = hour * 100 + minute;   //time in the form 1234 for 12:34
       for(int i = 0; i < 4; i++){
         
-      }
-      
-
-      
+      }    
   }
 }
 
+void Rise(void){
+  PE0 ^= 0x01;
+  RiseCount++;
+}
+void Fall(void){
+  PE0 ^= 0x01;
+  FallCount++;
+}
