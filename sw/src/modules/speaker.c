@@ -3,6 +3,8 @@
 #include "../../inc/Timer2A.c"
 #include "speaker.h"
 
+extern int speakerStatus;
+
 void Clock_Delay(volatile uint32_t ulCount){
   while(ulCount){
     ulCount--;
@@ -29,19 +31,36 @@ void speakerInit(){
     GPIO_PORTF_DIR_R |= 0x02;   // OUTPUT
     GPIO_PORTF_AFSEL_R &= ~0x02;      //  regular port function
     GPIO_PORTF_DEN_R |= 0x02;         //  enable digital port		
+		Timer2A_Init(&speakerOutput, 4000, 3); // enable interrupt for noise
 }
 
 //output sound using squarewave with a delay
-// TODO: change this to be interrupt based, and run at a faster frequency so it doesn't sound weird
 void speakerOutput(){
-	PF1 ^= 0x02;
+	if(speakerStatus){
+		PF1 ^= 0x02;
+	}
+}
+
+void speakerTest(void){
+	Timer2A_Init(&speakerOutput, 2000, 3);
+	Clock_Delay1ms(200);
+	Timer2A_Stop();
 }
 
 void speakerMode(int status){
+	// TODO: worried about previous status stuff
   if(status){
-    Timer2A_Init(&speakerOutput, 1000, 3);
+    Timer2A_Init(&speakerOutput, 4000, 3);
   }
   else{
     Timer2A_Stop();
   }
+}
+
+void speakerOn(){
+		Timer2A_Init(&speakerOutput, 4000, 3);
+}
+
+void speakerOff(){
+		Timer2A_Stop();
 }

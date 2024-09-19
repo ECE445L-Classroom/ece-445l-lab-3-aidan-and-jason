@@ -1,17 +1,20 @@
 #include "../../inc/ST7735.h"
+#include "images.h"
 
-
+extern int rawTime;
+extern int alarm;
 //write to lcd
-void draw(uint32_t hour, uint32_t minute){
+void draw(int mode){
 	// HELPFUL: ST7735_Color565(r,g,b) takes in 8 bit rgb values and returns the appropriate color in the ST7735 format
 	//ST7735_FillScreen(0x0000); // black bg, can change later
-	ST7735_DrawCircle(50,50,0xFFFF); // this will be 10px in diameter and probably filled in, 
+	//ST7735_DrawCircle(50,50,0xFFFF); // this will be 10px in diameter and probably filled in, 
 	// TODO: we're going to need to rewrite this method
 	// draw the current time digitally:
-	int x = 0;
-	ST7735_SetCursor(0,0);
-//	char *time = ['' '\0']; Aidan try finishing this later if you have time 
-//	ST7735_OutString(time)
+	int x = 1;
+	ST7735_SetCursor(x,0);
+	uint32_t hour = rawTime/60;
+	uint32_t minute = rawTime%60;
+	ST7735_SetTextColor(ST7735_YELLOW);
 	ST7735_OutUDec(hour);
 	if(hour/10){ // trying to make the printing look niceish by accounting for the number stuff
 		x+=2;
@@ -30,10 +33,37 @@ void draw(uint32_t hour, uint32_t minute){
 	ST7735_OutUDec(minute);
 	
 	// draw alarm
+	uint32_t alarmhour = alarm/60;
+	uint32_t alarmminute = alarm%60;
 	
-	// draw clock hands
+	x = 15;
+	ST7735_SetTextColor(ST7735_ORANGE);
+	ST7735_SetCursor(x,0);
+	ST7735_OutUDec(alarmhour);
+	if(alarmhour/10){ // trying to make the printing look niceish by accounting for the number stuff
+		x+=1;
+	}
+	x++;
+	ST7735_SetCursor(x,0);
+	ST7735_OutChar(':');
+	x++;
+	ST7735_SetCursor(x,0);
+	if(alarmminute < 10){
+		ST7735_SetCursor(x,0);
+		ST7735_OutUDec(0);
+		x++;
+	}
+	ST7735_SetCursor(x,0);
+	ST7735_OutUDec(alarmminute);
+	
+	// draw clock bg and hands
+	ST7735_DrawBitmap(24,120,clock,80,80);
+	//ST7735_DrawFastVLine(64, 40, 25, ST7735_BLUE);
+	//ST7735_DrawFastHLine(64, 79, 25, ST7735_BLUE);
+	
 	
 	// draw any other fun effects
+	// TODO: super mario thingy
 	
 }
 //watch faces

@@ -9,5 +9,8 @@ void speakerInit(void);
 void speakerOutput(void);
 void Clock_Delay1ms(volatile uint32_t n);
 void speakerMode(int status);
+void speakerTest(void);
+void speakerOn(void);
+void speakerOff(void);
 
 #endif

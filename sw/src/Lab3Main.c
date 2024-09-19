@@ -56,6 +56,8 @@ uint32_t RiseCount, FallCount;
 // global declarations
 volatile int switchIn;
 volatile int rawTime;
+int speakerStatus;
+int alarm = 677; // the time for the alarm, stored in the same manner as the global time (except no seconds)
 
 int main(void){
   int button1;
@@ -64,11 +66,9 @@ int main(void){
   int button4;
   int mode = 0;     //  0 for normal displaying mode, 1 for editing time, 2 for editing alarm
   int displayMode = 0;  //  possible idea to toggle between digital time and clock face, 0 for digital 1 for clock face
-  int hour;
+  int digitPlace = 0;
+	int hour;
   int minute;
-	int alarm;		// the time for the alarm, stored in the same manner as the global time (except no seconds) '
-	int alarmFlag = 0;
-  int speakerStatus = 0;
 	int debug = 0;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
@@ -89,29 +89,48 @@ int main(void){
       button3 = switchIn & 0x04;
       button4 = switchIn & 0x08;
 			
+		// TODO: still poorly made buttons
+      //if(button1 || button2 || button3 || button4){
+        //speakerStatus = (speakerStatus+1)%2;
+      //}
 
-      if(button1 || button2 || button3 || button4){
-        speakerStatus = 1;
-        speakerMode(1);
-      }
-      else if(speakerStatus == 1 && switchIn == 0){
-        speakerMode(0);
-        speakerStatus = 0;
-      }
       // switching mode
       if(button4){
         mode = (mode+1) % 3;
       }
-      
-
-      //store time in temporary local variable
-
-/*    handle switch logic:
+			
+			// TODO: button logic (mode, switches, ect)
+			/*    handle switch logic:
       1) if an alarm is sounding, then clear alarm on any switch input
       2) if switch to edit time is pressed, then enter "edit mode" (while loop which is only cleared once a time is confirmed and drawn)
        by possibly drawing an arrow and changing the raw time variable according to the change then drawing the temporary value
          once the select switch is pressed with a time, then confirm change and draw
-*/      
+*/    
+      
+			switch(mode) {
+				case 0: // default
+					// button 1: snooze (logic not done here)
+					// button 2: 
+					// button 3: change face of switch
+					// button 4: switch mode at any time
+				case 1: // edit time
+					// button 1: confirm
+					// button 2: select digit/place (can use underscore to show what is selected)
+					// button 3: increment selected digit
+					// button 4: switch mode at any time (also works as a confirm)
+				case 2: // edit alarm
+					// button 1: confirm
+					// button 2: select digit/place (can use underscore to show what is selected)
+					// button 3: increment selected digit
+					if(button3){alarm++;}
+					// button 4: switch mode at any time
+				default:
+					break;
+			};
+			
+
+      //store time in temporary local variable
+  
 			hour = rawTime/60;
       minute = rawTime%60;
 			
@@ -119,21 +138,18 @@ int main(void){
 			// alarm logic
 			if(hour == alarm/60 && minute == rawTime%60){ // this is wrong, I just don't know how to get rid of the seconds yet
 				// enable the interrupt for the square wave (might be unneeded read/write)
-				alarmFlag = 1;
+				speakerStatus = 1;
 			}
 			
-			if((button1 || button2 || button3 || button4) && alarmFlag){
-				alarmFlag = 0; // disable the interrupt
+			if((button1 || button2 || button3 || button4) && speakerStatus){
+				speakerStatus = 0; // disable the interrupt
 				// TODO: add snooze?
 			}
 
       //draw the clock face, hands, display digital time, and alarm setup.
-			draw(hour, minute);
+			draw(mode);
       
       int time = hour * 100 + minute;   //time in the form 1234 for 12:34
-      for(int i = 0; i < 4; i++){
-        
-      }    
   }
 }
 
