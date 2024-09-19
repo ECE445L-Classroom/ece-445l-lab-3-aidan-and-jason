@@ -57,19 +57,24 @@ uint32_t RiseCount, FallCount;
 volatile int switchIn;
 volatile int rawTime;
 int speakerStatus;
-int alarm = 10; // the time for the alarm, stored in the same manner as the global time (except no seconds)
+int alarm = 677; // the time for the alarm, stored in the same manner as the global time (except no seconds)
 
 int main(void){
   int button1;
   int button2;
   int button3;
   int button4;
+	int lb1;
+	int lb2;
+	int lb3;
+	int lb4;
   int mode = 0;     //  0 for normal displaying mode, 1 for editing time, 2 for editing alarm
   int displayMode = 0;  //  possible idea to toggle between digital time and clock face, 0 for digital 1 for clock face
   int digitPlace = 0;
 	int hour;
   int minute;
 	int debug = 0;
+	int editTime = 0;
   DisableInterrupts();
   PLL_Init(Bus80MHz);    // bus clock at 80 MHz
   ST7735_InitR(INITR_REDTAB);
@@ -95,7 +100,7 @@ int main(void){
       //}
 
       // switching mode
-      if(button4){
+      if(button4 && !(lb4)){
         mode = (mode+1) % 3;
       }
 			
@@ -113,17 +118,21 @@ int main(void){
 					// button 2: 
 					// button 3: change face of switch
 					// button 4: switch mode at any time
+					break;
 				case 1: // edit time
 					// button 1: confirm
 					// button 2: select digit/place (can use underscore to show what is selected)
 					// button 3: increment selected digit
+					if(button3 && !(lb3)){rawTime++;}
 					// button 4: switch mode at any time (also works as a confirm)
+					break;
 				case 2: // edit alarm
 					// button 1: confirm
 					// button 2: select digit/place (can use underscore to show what is selected)
 					// button 3: increment selected digit
-					if(button3){alarm++;}
+					if(button3 && !(lb3)){alarm++;}
 					// button 4: switch mode at any time
+					break;
 				default:
 					break;
 			};
@@ -136,10 +145,10 @@ int main(void){
 			
 			
 			// alarm logic
-			if(rawTime == alarm){ // this is wrong, I just don't know how to get rid of the seconds yet
-				// enable the interrupt for the square wave (might be unneeded read/write)
-				speakerStatus = 1;
-			}
+			 //if(rawTime == alarm){ // this is wrong, I just don't know how to get rid of the seconds yet
+			 	// enable the interrupt for the square wave (might be unneeded read/write)
+			 	//speakerStatus = 1;
+			//}
 			
 			if((button1 || button2 || button3 || button4) && speakerStatus){
 				speakerStatus = 0; // disable the interrupt
@@ -150,6 +159,11 @@ int main(void){
 			draw(mode);
       
       int time = hour * 100 + minute;   //time in the form 1234 for 12:34
+			
+			lb1 = button1;
+			lb2 = button2;
+			lb3 = button3;
+			lb4 = button4;
   }
 }
 

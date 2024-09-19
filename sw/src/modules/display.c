@@ -10,6 +10,7 @@ void draw(int mode){
 	//ST7735_DrawCircle(50,50,0xFFFF); // this will be 10px in diameter and probably filled in, 
 	// TODO: we're going to need to rewrite this method
 	// draw the current time digitally:
+	//if(mode == 1){return;}
 	int x = 1;
 	ST7735_SetCursor(x,0);
 	uint32_t hour = rawTime/60;
@@ -58,8 +59,9 @@ void draw(int mode){
 	
 	// draw clock bg and hands
 	ST7735_DrawBitmap(24,120,clock,80,80);
-	//ST7735_DrawFastVLine(64, 40, 25, ST7735_BLUE);
-	//ST7735_DrawFastHLine(64, 79, 25, ST7735_BLUE);
+	//ST7735_Line(x1, y1, x2, y2, color);
+	//ST7735_Line(x1, y1, x2, y2, color);
+
 	
 	
 	// draw any other fun effects
