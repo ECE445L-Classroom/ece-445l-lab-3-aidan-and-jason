@@ -57,7 +57,7 @@ uint32_t RiseCount, FallCount;
 volatile int switchIn;
 volatile int rawTime;
 int speakerStatus;
-int alarm = 677; // the time for the alarm, stored in the same manner as the global time (except no seconds)
+int alarm = 10; // the time for the alarm, stored in the same manner as the global time (except no seconds)
 
 int main(void){
   int button1;
@@ -136,7 +136,7 @@ int main(void){
 			
 			
 			// alarm logic
-			if(hour == alarm/60 && minute == rawTime%60){ // this is wrong, I just don't know how to get rid of the seconds yet
+			if(rawTime == alarm){ // this is wrong, I just don't know how to get rid of the seconds yet
 				// enable the interrupt for the square wave (might be unneeded read/write)
 				speakerStatus = 1;
 			}
